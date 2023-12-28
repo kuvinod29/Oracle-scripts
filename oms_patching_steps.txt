@@ -1,0 +1,45 @@
+Open the readme.html file that is supplied with the patch.
+
+unzip -d <PATCH_TOP_DIR> p35437906_135000_Generic.zip
+cd <PATCH_TOP_DIR>/35437906
+Analyze the patch
+omspatcher apply -analyze  [-property_file <location of property file>]
+
+Backup of the Repository database.
+Verify sucessful filesystem backup of MiddleWare Home
+Check SYSMAN password
+Notify Stakeholders about monitoring downtime
+Disable any External check for OMS up/down sttaus
+OEM blackout
+Export the OMS configuration
+$MW_HOME/bin/emctl exportconfig oms -sysman_pwd Pa$$word
+
+create a guranted restore point(GRP) on the database.
+$ emctl stop oms
+cd <PATCH_TOP_DIR>/35437906
+Apply latest release update patch on OEM
+omspatcher apply [-property_file <location of property file>]
+
+Bring OMS as per instruction
+
+For Agent
+
+cd <PATCH_TOP_DIR>/35437910
+agentpatcher apply -analyze
+
+Shut down the Management Agent by running the following command:
+
+$ emctl stop agent
+
+
+$ cd <PATCH_TOP_DIR>/35437910
+
+agentpatcher apply
+
+emctl start agent
+
+Rollback Plan:-
+
+Restore Repository Database using Restore Point
+UNTAR Middleware Home on respective OMS hosts
+Startup OMS

@@ -1,0 +1,58 @@
+set serveroutput on;
+sql
+DECLARE
+   table_name VARCHAR2(30);
+   row_count  NUMBER;
+
+   -- Declare a cursor to store results
+   TYPE ResultCursor IS REF CURSOR;
+   result_cursor ResultCursor;
+
+   CURSOR table_cursor IS
+      SELECT table_name
+      FROM all_tables
+      WHERE owner = 'SOE';
+
+BEGIN
+   FOR table_rec IN table_cursor LOOP
+      table_name := table_rec.table_name;
+
+      -- Construct dynamic SQL to get row count for each table
+      EXECUTE IMMEDIATE 'SELECT COUNT(*) FROM SOE.' || table_name INTO row_count;
+
+      -- Open the cursor to store the results
+      OPEN result_cursor FOR 'SELECT ''' || table_name || ''' AS table_name, ' || row_count || ' AS row_count FROM dual';
+      
+      -- Fetch and display the results
+      FETCH result_cursor INTO table_name, row_count;
+      DBMS_OUTPUT.PUT_LINE('Table: ' || table_name || ', Row Count: ' || row_count);
+
+      -- Close the cursor
+      CLOSE result_cursor;
+   END LOOP;
+END;
+/
+
+set serveroutput on;
+sql
+DECLARE
+   table_name VARCHAR2(30);
+   row_count  NUMBER;
+
+   CURSOR table_cursor IS
+      SELECT table_name
+      FROM all_tables
+      WHERE owner = 'SOE';
+
+BEGIN
+   FOR table_rec IN table_cursor LOOP
+      table_name := table_rec.table_name;
+
+      -- Construct dynamic SQL to get row count for each table
+      EXECUTE IMMEDIATE 'SELECT COUNT(*) FROM SOE.' || table_name INTO row_count;
+
+      -- Display the table name and row count
+      DBMS_OUTPUT.PUT_LINE('Table: ' || table_name || ', Row Count, ' || row_count);
+   END LOOP;
+END;
+/
